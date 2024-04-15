@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <stdlib.h>
+// Structure for a node of the binary search tree
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+// Function for preorder traversal
+void preorder(struct Node* root) {
+    if (root == NULL) return;
+    printf("%d ", root->data);
+    preorder(root->left);
+    preorder(root->right);
+}
+// Function for inorder traversal
+void inorder(struct Node* root) {
+    if (root == NULL) return;
+    inorder(root->left);
+    printf("%d ", root->data);
+    inorder(root->right);
+}
+// Function for postorder traversal
+void postorder(struct Node* root) {
+    if (root == NULL) return;
+    postorder(root->left);
+    postorder(root->right);
+    printf("%d ", root->data);
+}
+// Function to insert a node into the BST
+struct Node* insert(struct Node* root, int data) {
+    if (root == NULL) {
+        return createNode(data);
+    }
+    if (data < root->data) {
+        root->left = insert(root->left, data);
+    } else if (data > root->data) {
+        root->right = insert(root->right, data);
+    }
+    return root;
+}
+// Function to search for a node in the BST
+struct Node* search(struct Node* root, int key, int depth) {
+    if (root == NULL || root->data == key) {
+        if (root != NULL && root->data == key) {
+            printf("%d is found at depth %d in the BST.\n", key, depth);
+        }
+        return root;
+    }
+    if (key < root->data) {
+        return search(root->left, key, depth + 1);
+    }
+    return search(root->right, key, depth + 1);
+}
+int main() {
+    struct Node* root = NULL;
+    // Predefined nodes in the Binary Search Tree
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 20);
+    insert(root, 40);
+    insert(root, 70);
+    insert(root, 60);
+    insert(root, 80);
+    printf("Binary Search Tree Operations\n");
+    int choice, key;
+    while (1) {
+        printf("\nChoose one from the below options...\n");
+        printf("1. Search for a key\n");
+        printf("2. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                printf("Enter key to search: ");
+                scanf("%d", &key);
+                search(root, key, 0);
+                break;
+            case 2:
+                printf("Exiting...\n");
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+      printf("Binary Tree Traversals:\n");
+      printf("Preorder Traversal: ");
+      preorder(root);
+      printf("\n");
+      printf("Inorder Traversal: ");
+      inorder(root);
+      printf("\n");
+      printf("Postorder Traversal: ");
+      postorder(root);
+      printf("\n");
+    }
+    return 0;
+}
