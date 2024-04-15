@@ -1,0 +1,219 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node
+{
+    int info;
+    struct Node *next;
+};
+struct Node *start = NULL;
+struct Node *traverse(struct Node *);
+struct Node *insert_at_beg(struct Node *);
+struct Node *insert_at_end(struct Node *);
+//struct Node *insert_at_loc(struct Node *);
+struct Node *search(struct Node *, int);
+struct Node *delete_first(struct Node *);
+struct Node *delete_last(struct Node *);
+//struct Node *delete_any_loc(struct Node *);
+int main()
+{
+    int choice;
+    char ch;
+    do
+    {
+        printf("1. Insertion at Beginning     2. Insertion at End     3. Insertion at any Location     4. Traversing the List     5. Delete First Node     6. Delete Last Node     7. Delete Any Node\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+      switch (choice)
+        
+        case 1:
+            start = insert_at_beg(start);
+            break;
+        case 2:
+            start = insert_at_end(start);
+            break;
+        //case 3:
+          //  start = insert_at_loc(start);
+            //break;
+        case 4:
+            traverse(start);
+            break;
+        case 5:
+            start = delete_first(start);
+            break;
+        case 6:
+            start = delete_last(start);
+            break;
+       // case 7:
+         //   start = delete_any_loc(start);
+           // break;
+        default:
+            printf("\nWrong Choice");
+        }
+        printf("\nDo you want to continue (y/n): ");
+        scanf(" %c", &ch);
+    } while (ch == 'y' || ch == 'Y');
+
+    return 0;
+}
+
+struct Node *insert_at_beg(struct Node *start)
+{
+    struct Node *NEW;
+    NEW = (struct Node *)malloc(sizeof(struct Node));
+    if (NEW == NULL)
+        printf("\nNew Node Not Available");
+    else
+    {
+        printf("\nEnter the data in New Node: ");
+        scanf("%d", &NEW->info);
+        if (start == NULL)
+        {
+            start = NEW;
+            NEW->next = start; // Point to itself
+        }
+        else
+        {
+            struct Node *temp = start;
+            while (temp->next != start)
+                temp = temp->next;
+            temp->next = NEW;
+            NEW->next = start;
+            start = NEW;
+        }
+        printf("New Node Inserted Successfully");
+        traverse(start);
+    }
+    return start;
+}
+
+struct Node *insert_at_end(struct Node *start)
+{
+    struct Node *NEW;
+    NEW = (struct Node *)malloc(sizeof(struct Node));
+    if (NEW == NULL)
+        printf("Insertion Not Allowed");
+    else
+    {
+        printf("\nEnter the data in New Node: ");
+        scanf("%d", &NEW->info);
+        if (start == NULL)
+        {
+            start = NEW;
+            NEW->next = start; // Point to itself
+        }
+        else
+        {
+            struct Node *temp = start;
+            while (temp->next != start)
+                temp = temp->next;
+            temp->next = NEW;
+            NEW->next = start;
+        }
+        printf("Node Inserted Successfully");
+        traverse(start);
+    }
+    return start;
+}
+
+//struct Node *insert_at_loc(struct Node *start)
+//{
+//    int item;
+//    printf("\nEnter the Node Value after which New Node can be inserted: ");
+ //   scanf("%d", &item);
+  //  struct Node *ptr;
+   // ptr = search(start, item);
+    //if (ptr == NULL)
+    //    printf("\nNode not Found & Insertion Not Allowed");
+    //else
+    //{
+    //    struct Node *NEW;
+    //    NEW = (struct Node *)malloc(sizeof(struct Node));
+        //printf("\nEnter data in New Node: ");
+        //scanf("%d", &NEW->info);
+        //NEW->next = ptr->next;
+        //ptr->next = NEW;
+        //printf("New Node Inserted Successfully");
+      //  traverse(start);
+    //}
+  //  return start;
+//}
+
+struct Node *search(struct Node *start, int item)
+{
+    struct Node *ptr = start;
+    do
+    {
+        if (item == ptr->info)
+            return ptr;
+        ptr = ptr->next;
+    } while (ptr != start);
+    return NULL;
+}
+
+struct Node *traverse(struct Node *start)
+{
+    struct Node *ptr;
+    ptr = start;
+    if (ptr == NULL)
+        printf("\nList is Empty");
+    else
+    {
+        printf("\n");
+        do
+        {
+            printf("|%d|->", ptr->info);
+            ptr = ptr->next;
+        } while (ptr != start);
+    }
+    return start;
+}
+
+struct Node *delete_first(struct Node *start)
+{
+    if (start == NULL)
+        printf("\nList is Empty");
+    else
+    {
+        struct Node *temp = start, *prev = NULL;
+        while (temp->next != start)
+            temp = temp->next;
+        temp->next = start->next;
+        free(start);
+        start = temp->next;
+        printf("\nFirst Node Deleted");
+        if (start == NULL) // Handle empty list
+            printf("\nList is Empty");
+        else
+            traverse(start);
+    }
+    return start;
+}
+
+struct Node *delete_last(struct Node *start)
+{
+    if (start == NULL)
+        printf("\nList is Empty");
+    else
+    {
+        struct Node *temp = start, *prev = NULL;
+        while (temp->next != start)
+        {
+            prev = temp;
+            temp = temp->next;
+        }
+        if (temp == start) // Single node case
+        {
+            free(temp);
+            start = NULL;
+        }
+        else
+        {
+            prev->next = start;
+            free(temp);
+        }
+        printf("\nLast Node Deleted");
+        if (start != NULL)
+            traverse(start);
+    }
+    return start;
+}
